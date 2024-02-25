@@ -1,5 +1,6 @@
 package utils;
 
+import boardView.PalBoard;
 import boardView.SelectPlayerPane;
 import boardView.StartPane;
 import javafx.scene.control.Button;
@@ -8,8 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import model.Player;
 
 
 public class Goto {
@@ -20,16 +23,20 @@ public class Goto {
     }
 
     public static void clear(){
-        if(startPane.getChildren().size() <= 1){
+        if(startPane.getChildren().size() <= 0){
             return;
         }
-        for(int i = startPane.getChildren().size()-1 ;i>=1;i--){
+        for(int i = startPane.getChildren().size()-1 ;i>=0;i--){
             startPane.getChildren().remove(startPane.getChildren().get(i));
         }
     }
 
     public static void startPane(){
         clear();
+        Text text = new Text("Pal Bomb");
+        text.setFill(Color.DARKCYAN);
+        text.setFont(Font.font("Verdana",FontWeight.BOLD,32));
+        startPane.getChildren().add(text);
         startPane.getChildren().add(startGameButton());
         startPane.getChildren().add(backToStartPane());
     }
@@ -67,9 +74,24 @@ public class Goto {
 
     private static void selectPlayerPane(){
         clear();
-        startPane.getChildren().add(backToStartPane());
+        Text text = new Text("Pal Bomb");
+        text.setFill(Color.DARKCYAN);
+        text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
+        startPane.getChildren().add(text);
         startPane.getChildren().add(new SelectPlayerPane());
+        startPane.getChildren().add(backToStartPane());
     }
 
+    public static void palBoard(){
+        clear();
+        Text text = new Text("Pal Bomb");
+        text.setFill(Color.DARKCYAN);
+        text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
+        startPane.getChildren().add(text);
+        PalBoard palBoard = new PalBoard();
+        startPane.getChildren().add(palBoard);
+        palBoard.setFocusTraversable(true);
+        startPane.getChildren().add(backToStartPane());
 
+    }
 }

@@ -20,14 +20,9 @@ public class StartPane extends VBox {
         instance.setAlignment(Pos.TOP_CENTER);
         instance.setSpacing(16);
         instance.setPadding(new Insets(32,0,32,0));
-        Text text = new Text("Pal Bomb");
-        text.setFill(Color.DARKCYAN);
-        text.setFont(Font.font("Verdana",FontWeight.BOLD,32));
-        instance.getChildren().add(text);
         Goto.setRootPane(this);
         Goto.startPane();
     }
-
 
 
     public static StartPane getStartPane() {
