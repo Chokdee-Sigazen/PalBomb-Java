@@ -21,9 +21,12 @@ public class SelectPlayerPane extends GridPane {
         Button button2 = buttonPlayer(2);
         Button button3 = buttonPlayer(3);
         Button button4 = buttonPlayer(4);
-        setConstraints(button2,0,0);
-        setConstraints(button3,0,1);
-        setConstraints(button4,0,2);
+        setConstraints(button2,1,0);
+        setConstraints(button3,1,1);
+        setConstraints(button4,1,2);
+        getChildren().add(button2);
+        getChildren().add(button3);
+        getChildren().add(button4);
 
     }
 
@@ -31,18 +34,18 @@ public class SelectPlayerPane extends GridPane {
         Button button = new Button();
         if(countPlayer == 2){
             button.setText("2 Player");
-            button.setBorder(new Border(new BorderStroke(Color.DARKCYAN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
-            button.setBackground(new Background(new BackgroundFill(Color.WHITE,null,null)));
+            button.setBorder(new Border(new BorderStroke(Color.CYAN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+            button.setBackground(new Background(new BackgroundFill(Color.DARKCYAN,null,null)));
         }
         if(countPlayer == 3){
             button.setText("3 Player");
-            button.setBorder(new Border(new BorderStroke(Color.DARKRED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
-            button.setBackground(new Background(new BackgroundFill(Color.WHITE,null,null)));
+            button.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+            button.setBackground(new Background(new BackgroundFill(Color.DARKRED,null,null)));
         }
         if(countPlayer == 4){
             button.setText("4 Player");
-            button.setBorder(new Border(new BorderStroke(Color.DARKGREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
-            button.setBackground(new Background(new BackgroundFill(Color.WHITE,null,null)));
+            button.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+            button.setBackground(new Background(new BackgroundFill(Color.DARKGREEN,null,null)));
         }
         button.setTextFill(Color.DARKCYAN);
         button.setPrefWidth(300);
