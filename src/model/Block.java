@@ -1,17 +1,18 @@
 package model;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class Block {
-    private Image image;
+public abstract class Block {
+    private ImageView imageView;
 
     public Block(String imagePath) {
-        image = AnimationUtils.getImageByPath(imagePath);
+        imageView = new ImageView(AnimationUtils.getImageByPath(imagePath));
     }
 
-    public Image getImage() {
-        return image;
+    public ImageView getImageView() {
+        return imageView;
     }
 
-
+    public abstract void handleHit();
 }
