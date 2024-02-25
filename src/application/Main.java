@@ -1,17 +1,18 @@
-package boardView;
+package application;
 
+import boardView.StartPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class PalBoard extends Application {
+public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene scene = new Scene(Root,1024,1024);
+        Scene scene = new Scene(StartPane.getStartPane(),512,512);
         stage.setScene(scene);
         stage.setTitle("PalBomb");
         stage.setResizable(false);
