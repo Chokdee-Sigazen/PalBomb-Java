@@ -3,6 +3,7 @@ package utils;
 import boardView.PalBoard;
 import boardView.SelectPlayerPane;
 import boardView.StartPane;
+import gameControl.GameController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -88,10 +89,11 @@ public class Goto {
         text.setFill(Color.DARKCYAN);
         text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
         startPane.getChildren().add(text);
-        PalBoard palBoard = new PalBoard();
+        System.out.println("hi");
+        PalBoard palBoard = GameController.getInstance().getPalBoard();
+        GameController.getInstance().startGame();
         startPane.getChildren().add(palBoard);
         palBoard.setFocusTraversable(true);
         startPane.getChildren().add(backToStartPane());
-
     }
 }

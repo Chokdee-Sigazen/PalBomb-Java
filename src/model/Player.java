@@ -1,6 +1,9 @@
 package model;
 
+import gameControl.GameController;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -13,7 +16,11 @@ public class Player {
     private boolean ghost;
     private final ArrayList<Image> animation;
 
-    public Player(int playerNumber){
+    private Rectangle body;
+    private int x;
+    private int y;
+
+    public Player(int playerNumber,int x ,int y){
         setHp(3);
         setPower(1);
         setBomb(1);
@@ -21,9 +28,37 @@ public class Player {
         setImmortal(false);
         setGhost(false);
         animation = new ArrayList<>();
-        AnimationUtils.addAnimation(playerNumber, animation);
+        //AnimationUtils.addAnimation(playerNumber, animation);
+        this.body = new Rectangle(70, 70, Color.YELLOW);
+        this.x = x;
+        this.y = y;
+        body.setLayoutX(x * 70);
+        body.setLayoutY(y * 70);
     }
 
+    public Rectangle getBody() {
+        return body;
+    }
+
+    public void setBody(Rectangle body) {
+        this.body = body;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
     public boolean isImmortal() {
         return immortal;
     }
