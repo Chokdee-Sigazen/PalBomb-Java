@@ -16,11 +16,13 @@ public class Player {
     private boolean ghost;
     private final ArrayList<Image> animation;
 
+    private ArrayList<Bomb> bombs;
+
     private Rectangle body;
     private int x;
     private int y;
 
-    public Player(int playerNumber,int x ,int y){
+    public Player(int playerNumber,int x ,int y,int color){
         setHp(3);
         setPower(1);
         setBomb(1);
@@ -29,17 +31,24 @@ public class Player {
         setGhost(false);
         animation = new ArrayList<>();
         //AnimationUtils.addAnimation(playerNumber, animation);
-        this.body = new Rectangle(70, 70, Color.YELLOW);
+        this.body = new Rectangle(50, 50, getColorForPlayer(color));
         this.x = x;
         this.y = y;
-        body.setLayoutX(x * 70);
-        body.setLayoutY(y * 70);
+        body.setLayoutX(x * 50);
+        body.setLayoutY(y * 50);
     }
 
     public Rectangle getBody() {
         return body;
     }
-
+    private Color getColorForPlayer(int value) {
+        return switch (value) {
+            case 3 -> Color.DARKRED;
+            case 2 -> Color.LIGHTBLUE;
+            case 1 -> Color.YELLOW;
+            default -> Color.BLACK;
+        };
+    }
     public void setBody(Rectangle body) {
         this.body = body;
     }

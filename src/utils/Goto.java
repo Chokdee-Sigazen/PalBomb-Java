@@ -39,7 +39,6 @@ public class Goto {
         text.setFont(Font.font("Verdana",FontWeight.BOLD,32));
         startPane.getChildren().add(text);
         startPane.getChildren().add(startGameButton());
-        startPane.getChildren().add(backToStartPane());
     }
 
     public static Button backToStartPane(){
