@@ -31,11 +31,11 @@ public class Player {
         setGhost(false);
         animation = new ArrayList<>();
         //AnimationUtils.addAnimation(playerNumber, animation);
-        this.body = new Rectangle(50, 50, getColorForPlayer(color));
+        this.body = new Rectangle(35, 35, getColorForPlayer(color));
         this.x = x;
         this.y = y;
-        body.setLayoutX(x * 50);
-        body.setLayoutY(y * 50);
+        body.setLayoutX(75 + x * 35);
+        body.setLayoutY(y * 35);
     }
 
     public Rectangle getBody() {
@@ -43,7 +43,8 @@ public class Player {
     }
     private Color getColorForPlayer(int value) {
         return switch (value) {
-            case 3 -> Color.DARKRED;
+            case 4 -> Color.LIGHTPINK;
+            case 3 -> Color.LIGHTGREEN;
             case 2 -> Color.LIGHTBLUE;
             case 1 -> Color.YELLOW;
             default -> Color.BLACK;

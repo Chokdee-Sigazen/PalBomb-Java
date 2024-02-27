@@ -15,6 +15,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import model.Player;
 
+import java.awt.*;
+
 
 public class Goto {
     private static StartPane startPane;
@@ -82,15 +84,16 @@ public class Goto {
         startPane.getChildren().add(backToStartPane());
     }
 
-    public static void palBoard(){
+    public static void palBoard(int number){
         clear();
         Text text = new Text("Pal Bomb");
         text.setFill(Color.DARKCYAN);
         text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
         startPane.getChildren().add(text);
         System.out.println("hi");
-        PalBoard palBoard = GameController.getInstance().getPalBoard();
-        GameController.getInstance().startGame();
+        PalBoard palBoard = new PalBoard();
+        GameController.getInstance().setPalBoard(palBoard);
+        GameController.getInstance().startGame(number);
         startPane.getChildren().add(palBoard);
         palBoard.setFocusTraversable(true);
         startPane.getChildren().add(backToStartPane());

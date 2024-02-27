@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Scene scene = new Scene(StartPane.getStartPane(),512,512);
+        Scene scene = new Scene(StartPane.getStartPane(),750,750);
         stage.setScene(scene);
         stage.setTitle("PalBomb");
         stage.setResizable(false);

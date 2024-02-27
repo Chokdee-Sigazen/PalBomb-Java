@@ -13,9 +13,9 @@ import javafx.scene.shape.Rectangle;
 
 public class PalBoard extends Pane {
 
-    private final int HEIGHT = 7;
-    private final int TILE = 50;
-    private final int WIDTH = 7;
+    private final int HEIGHT = 15;
+    private final int TILE = 35;
+    private final int WIDTH = 15;
     private final int[][] map;
     public int[][] getMap() {
         return map;
@@ -23,14 +23,15 @@ public class PalBoard extends Pane {
 
 
     public PalBoard() {
+
         map = generateMap();
         System.out.println("hi");
         setPrefSize(WIDTH * TILE, HEIGHT * TILE);
-        for (int y = 1; y <= HEIGHT; y++) {
-            for (int x = 1; x <= WIDTH; x++) {
+        for (int y = 0; y <= HEIGHT+1; y++) {
+            for (int x = 0; x <= WIDTH+1; x++) {
                 Rectangle tile = new Rectangle(TILE, TILE);
                 tile.setFill(getColor(map[y][x]));
-                tile.setLayoutX(x * TILE);
+                tile.setLayoutX(75 + x * TILE);
                 tile.setLayoutY(y * TILE);
                 getChildren().add(tile);
             }
@@ -48,7 +49,32 @@ public class PalBoard extends Pane {
                     continue;
                 }
                 generatedMap[y][x] = (int) (Math.random() * 3);
+                if(generatedMap[y][x] == 1){
+                    generatedMap[y][x] = 2;
+                }
+
             }
+        }
+        for(int y = 2; y <= HEIGHT; y+=2){
+            for(int x = 2; x <= WIDTH; x+=2){
+                generatedMap[y][x] = 3;
+            }
+        }
+        for(int i = -1;i<=1;i++){
+            generatedMap[3][3+i] = 1;
+            generatedMap[3+i][3] = 1;
+        }
+        for(int i = -1;i<=1;i++){
+            generatedMap[HEIGHT - 2 + i][WIDTH - 2] = 1;
+            generatedMap[HEIGHT - 2][WIDTH - 2 + i] = 1;
+        }
+        for(int i = -1;i<=1;i++){
+            generatedMap[3 + i][WIDTH - 2] = 1;
+            generatedMap[3][WIDTH - 2 + i] = 1;
+        }
+        for(int i = -1;i<=1;i++){
+            generatedMap[HEIGHT - 2 + i][3] = 1;
+            generatedMap[HEIGHT - 2][3 + i] = 1;
         }
         return generatedMap;
     }

@@ -13,10 +13,13 @@ import model.Player;
 
 public class GameController {
 
-    private final int HEIGHT = 7;
-    private final int WIDTH = 7;
+    private final int HEIGHT = 15;
+    private final int WIDTH = 15;
     private Player player1;
     private Player player2;
+
+    private Player player3;
+    private Player player4;
     private PalBoard palBoard;
     private static GameController instance;
     private boolean isMoving = false;
@@ -25,11 +28,9 @@ public class GameController {
 
 
 
-    private final int TILE_SIZE = 50;
+    private final int TILE_SIZE = 35;
 
     public GameController() {
-        this.player1 = new Player(1,1, 1,1); // Initial player1 position
-        this.player2 = new Player(2,HEIGHT,WIDTH,2);
         this.palBoard = new PalBoard();
     }
 
@@ -37,16 +38,42 @@ public class GameController {
         return palBoard;
     }
 
-    public void startGame(){
-        palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
-        palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
+    public void startGame(int number){
+        if(number == 2){
+            this.player1 = new Player(1,3, 3,1);
+            this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
+            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
+        }
+        if(number == 3){
+            this.player1 = new Player(1,3, 3,1);
+            this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
+            this.player3 = new Player(3,HEIGHT-2,3,3);
+            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer3().getBody());
+        }
+        if(number == 4){
+            this.player1 = new Player(1,3, 3,1);
+            this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
+            this.player3 = new Player(3,HEIGHT-2,3,3);
+            this.player4 = new Player(4,3,WIDTH-2,4);
+            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer3().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer4().getBody());
+        }
         System.out.println("hi");
         palBoard.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
             if (key == KeyCode.W || key == KeyCode.A || key == KeyCode.S || key == KeyCode.D || key == KeyCode.Q) {
                 GameController.getInstance().handleplayer1Movement(key);
-            } else if (key == KeyCode.U || key == KeyCode.K || key == KeyCode.J || key == KeyCode.H || key == KeyCode.Y) {
+            } else if (key == KeyCode.Y || key == KeyCode.G || key == KeyCode.H || key == KeyCode.J || key == KeyCode.T) {
                 GameController.getInstance().handlePlayer2Movement(key);
+            } else if (key == KeyCode.NUMPAD8 || key == KeyCode.NUMPAD5 || key == KeyCode.NUMPAD4 || key == KeyCode.NUMPAD6 ||key == KeyCode.NUMPAD7 ) {
+                GameController.getInstance().handleplayer3Movement(key);
+            }else if (key == KeyCode.P || key == KeyCode.SEMICOLON || key == KeyCode.L || key == KeyCode.QUOTE ||key == KeyCode.O ) {
+                GameController.getInstance().handleplayer4Movement(key);
             }
         });
 
@@ -60,20 +87,20 @@ public class GameController {
                 int currentplayer2Y = player2.getY();
                 int newTileX = currentplayer2X;
                 int newTileY = currentplayer2Y;
-                if (key == KeyCode.U) {
+                if (key == KeyCode.Y) {
                     newTileY--;
                     if(!isValidMove(newTileX, newTileY)) newTileY++;
-                } else if (key == KeyCode.J) {
+                } else if (key == KeyCode.H) {
                     newTileY++;
                     if(!isValidMove(newTileX, newTileY)) newTileY--;
-                } else if (key == KeyCode.H) {
+                } else if (key == KeyCode.G) {
                     newTileX--;
                     if(!isValidMove(newTileX, newTileY)) newTileX++;
-                } else if (key == KeyCode.K) {
+                } else if (key == KeyCode.J) {
                     System.out.println("hi Movement");
                     newTileX++;
                     if(!isValidMove(newTileX, newTileY)) newTileX--;
-                } else if (key == KeyCode.Y) {
+                } else if (key == KeyCode.T) {
                     placeBomb(player2);
                 }
                 player2.setY(newTileY);
@@ -99,7 +126,100 @@ public class GameController {
             movementThread.start();
         }
     }
+    public void handleplayer3Movement(KeyCode key) {
+        if (!isMoving) {
+            isMoving = true;
+            movementThread = new Thread(() -> {
+                int currentplayer3X = player3.getX();
+                int currentplayer3Y = player3.getY();
+                int newTileX = currentplayer3X;
+                int newTileY = currentplayer3Y;
+                if (key == KeyCode.NUMPAD8) {
+                    newTileY--;
+                    if(!isValidMove(newTileX, newTileY)) newTileY++;
+                } else if (key == KeyCode.NUMPAD5) {
+                    newTileY++;
+                    if(!isValidMove(newTileX, newTileY)) newTileY--;
+                } else if (key == KeyCode.NUMPAD4) {
+                    newTileX--;
+                    if(!isValidMove(newTileX, newTileY)) newTileX++;
+                } else if (key == KeyCode.NUMPAD6) {
+                    System.out.println("hi Movement");
+                    newTileX++;
+                    if(!isValidMove(newTileX, newTileY)) newTileX--;
+                } else if (key == KeyCode.NUMPAD7) {
+                    placeBomb(player3);
+                }
+                player3.setY(newTileY);
+                player3.setX(newTileX);
+                if (isValidMove(newTileX, newTileY)) {
+                    System.out.println(player3.getY());
+                    System.out.println(player3.getX());
+                    double incrementX = ((double) (newTileX - currentplayer3X));
+                    double incrementY = ((double) (newTileY - currentplayer3Y));
+                    System.out.println("Increment");
+                    System.out.println(incrementX);
+                    System.out.println(incrementY);
+                    System.out.println(player3.getBody().getLayoutX());
+                    Platform.runLater(() -> {
+                        player3.getBody().setLayoutX((player3.getBody().getLayoutX() + incrementX * TILE_SIZE));
+                        player3.getBody().setLayoutY((player3.getBody().getLayoutY() + incrementY * TILE_SIZE));
+                        System.out.println(player3.getBody().getLayoutX());
+                    });
 
+                }
+                isMoving = false;
+            });
+            movementThread.start();
+        }
+    }
+    public void handleplayer4Movement(KeyCode key) {
+        if (!isMoving) {
+            isMoving = true;
+            movementThread = new Thread(() -> {
+                int currentplayer4X = player4.getX();
+                int currentplayer4Y = player4.getY();
+                int newTileX = currentplayer4X;
+                int newTileY = currentplayer4Y;
+                if (key == KeyCode.P) {
+                    newTileY--;
+                    if(!isValidMove(newTileX, newTileY)) newTileY++;
+                } else if (key == KeyCode.SEMICOLON) {
+                    newTileY++;
+                    if(!isValidMove(newTileX, newTileY)) newTileY--;
+                } else if (key == KeyCode.L) {
+                    newTileX--;
+                    if(!isValidMove(newTileX, newTileY)) newTileX++;
+                } else if (key == KeyCode.QUOTE) {
+                    System.out.println("hi Movement");
+                    newTileX++;
+                    if(!isValidMove(newTileX, newTileY)) newTileX--;
+                } else if (key == KeyCode.O) {
+                    placeBomb(player4);
+                }
+                player4.setY(newTileY);
+                player4.setX(newTileX);
+                if (isValidMove(newTileX, newTileY)) {
+                    System.out.println(player4.getY());
+                    System.out.println(player4.getX());
+                    double incrementX = ((double) (newTileX - currentplayer4X));
+                    double incrementY = ((double) (newTileY - currentplayer4Y));
+                    System.out.println("Increment");
+                    System.out.println(incrementX);
+                    System.out.println(incrementY);
+                    System.out.println(player4.getBody().getLayoutX());
+                    Platform.runLater(() -> {
+                        player4.getBody().setLayoutX((player4.getBody().getLayoutX() + incrementX * TILE_SIZE));
+                        player4.getBody().setLayoutY((player4.getBody().getLayoutY() + incrementY * TILE_SIZE));
+                        System.out.println(player4.getBody().getLayoutX());
+                    });
+
+                }
+                isMoving = false;
+            });
+            movementThread.start();
+        }
+    }
     public void handleplayer1Movement(KeyCode key) {
         if (!isMoving) {
             isMoving = true;
@@ -196,23 +316,21 @@ public class GameController {
 
     private void detonateBomb(Bomb bomb) {
         // Get bomb coordinates from the Circle object
-        int bombX = (int) Math.floor(bomb.getBombVisual().getLayoutX() / TILE_SIZE);
+        int bombX = (int) Math.floor((bomb.getBombVisual().getLayoutX()-75) / TILE_SIZE);
         int bombY = (int) Math.floor(bomb.getBombVisual().getLayoutY() / TILE_SIZE);
-
         palBoard.getMap()[bombY][bombX] = 0; // Reset map value back to 0
 
         // Check surrounding tiles within range 1 in the four directions
         for (int dx = -1; dx <= 1; dx++) {
-            if (Math.abs(dx) == 1) { // Check only horizontal movement
-                int newX = bombX + dx;
-                int newY = bombY;
-                if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] == 2) {
-                    // Destroy breakable tile (map[y][x] == 2)
-                    palBoard.getMap()[newY][newX] = 0;
-                    Platform.runLater(() -> {
-                        palBoard.getChildren().remove(findTile(newX, newY));
-                    });
-                }
+            // Check only horizontal movement
+            int newX = bombX + dx;
+            int newY = bombY;
+            if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] == 2) {
+                // Destroy breakable tile (map[y][x] == 2)
+                palBoard.getMap()[newY][newX] = 0;
+                Platform.runLater(() -> {
+                    palBoard.getChildren().remove(findTile(newX, newY));
+                });
             }
         }
 
@@ -241,7 +359,7 @@ public class GameController {
 
     private Rectangle findTile(int x, int y) {
         for (Node tile : palBoard.getChildren()) {
-            if (tile.getLayoutX() == x * TILE_SIZE && tile.getLayoutY() == y * TILE_SIZE) {
+            if (tile.getLayoutX() == x * TILE_SIZE + 75  && tile.getLayoutY() == y * TILE_SIZE) {
                 return (Rectangle) tile;
             }
         }
@@ -265,6 +383,10 @@ public class GameController {
         return HEIGHT;
     }
 
+    public void setPalBoard(PalBoard palBoard) {
+        this.palBoard = palBoard;
+    }
+
     public int getWIDTH() {
         return WIDTH;
     }
@@ -275,6 +397,14 @@ public class GameController {
 
     public int getTILE_SIZE() {
         return TILE_SIZE;
+    }
+
+    public Player getPlayer3() {
+        return player3;
+    }
+
+    public Player getPlayer4() {
+        return player4;
     }
 
     public static GameController getInstance() {

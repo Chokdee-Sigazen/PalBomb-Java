@@ -54,7 +54,7 @@ public class SelectPlayerPane extends GridPane {
             });
             button.setOnMouseClicked(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.web("00D5C8"),null,null)));
-                Goto.palBoard();
+                Goto.palBoard(2);
             });
             button.setOnMouseExited(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.DARKCYAN,null,null)));
@@ -72,6 +72,7 @@ public class SelectPlayerPane extends GridPane {
             });
             button.setOnMouseClicked(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.web("D50054"),null,null)));
+                Goto.palBoard(3);
             });
             button.setOnMouseExited(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.DARKRED,null,null)));
@@ -89,6 +90,7 @@ public class SelectPlayerPane extends GridPane {
             });
             button.setOnMouseClicked(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.web("00D5C8"),null,null)));
+                Goto.palBoard(4);
             });
             button.setOnMouseExited(event -> {
                 button.setBackground(new Background(new BackgroundFill(Color.DARKGREEN,null,null)));
