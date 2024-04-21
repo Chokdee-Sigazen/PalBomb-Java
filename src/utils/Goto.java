@@ -1,11 +1,13 @@
 package utils;
 
+import application.Main;
 import boardView.PalBoard;
 import boardView.SelectPlayerPane;
 import boardView.StartPane;
 import gameControl.GameController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.BlurType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -13,14 +15,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import model.Player;
+import javafx.scene.effect.DropShadow;
 
 import java.awt.*;
 
 
 public class Goto {
     private static StartPane startPane;
-
     public static void setRootPane(StartPane startPane){
         Goto.startPane = startPane;
     }
@@ -36,11 +39,8 @@ public class Goto {
 
     public static void startPane(){
         clear();
-        Text text = new Text("Pal Bomb");
-        text.setFill(Color.DARKCYAN);
-        text.setFont(Font.font("Verdana",FontWeight.BOLD,32));
-        startPane.getChildren().add(text);
         startPane.getChildren().add(startGameButton());
+        startPane.getChildren().add(endGameButton());
     }
 
     public static Button backToStartPane(){
@@ -53,44 +53,57 @@ public class Goto {
         return button;
     }
 
-
-
     private static Button startGameButton(){
-        Button startGameButton = new Button("Start Game");
-        startGameButton.setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
-        startGameButton.setTextFill(Color.WHITE);
-        startGameButton.setFont(Font.font("Arial", 18));
-        startGameButton.setPadding(new javafx.geometry.Insets(10, 20, 10, 20));
+        Button startGameButton = new Button("Start");
+        startGameButton.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+        startGameButton.setTextFill(Color.BLACK);
+        startGameButton.setFont(Font.font("Verdana", 32));
+        startGameButton.setPadding(new javafx.geometry.Insets(10, 50, 10, 50));
+        startGameButton.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+        VBox.setMargin(startGameButton,new javafx.geometry.Insets(350,0,0,0));
+
         startGameButton.setOnMouseEntered(event -> {
-            startGameButton.setBackground(new Background(new BackgroundFill(Color.DARKGREEN,null,null)));
+            startGameButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));
+            startGameButton.setTextFill(Color.BLACK);
         });
         startGameButton.setOnMouseClicked(event -> {
-            startGameButton.setBackground(new Background(new BackgroundFill(Color.web("025800"),null,null)));
+            startGameButton.setBackground(new Background(new BackgroundFill(Color.web("025800"), new CornerRadii(15),null)));
             selectPlayerPane();
         });
         startGameButton.setOnMouseExited(event -> {
-            startGameButton.setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
+            startGameButton.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+            startGameButton.setTextFill(Color.BLACK);
         });
         return startGameButton;
     }
 
+    private static Button endGameButton(){
+        Button endGameButton = new Button("Exit");
+        endGameButton.setOnMouseClicked(event -> Main.closeStage());
+        endGameButton.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+        endGameButton.setTextFill(Color.BLACK);
+        endGameButton.setFont(Font.font("Verdana", 32));
+        endGameButton.setPadding(new javafx.geometry.Insets(10, 60, 10, 60));
+
+        endGameButton.setOnMouseEntered(event -> {
+            endGameButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));
+            endGameButton.setTextFill(Color.BLACK);
+        });
+        endGameButton.setOnMouseExited(event -> {
+            endGameButton.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+            endGameButton.setTextFill(Color.BLACK);
+        });
+        return endGameButton;
+    }
+
     private static void selectPlayerPane(){
         clear();
-        Text text = new Text("Pal Bomb");
-        text.setFill(Color.DARKCYAN);
-        text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
-        startPane.getChildren().add(text);
         startPane.getChildren().add(new SelectPlayerPane());
         startPane.getChildren().add(backToStartPane());
     }
 
     public static void palBoard(int number){
         clear();
-        Text text = new Text("Pal Bomb");
-        text.setFill(Color.DARKCYAN);
-        text.setFont(Font.font("Verdana", FontWeight.BOLD,32));
-        startPane.getChildren().add(text);
-        System.out.println("hi");
         PalBoard palBoard = new PalBoard();
         GameController.getInstance().setPalBoard(palBoard);
         GameController.getInstance().startGame(number);
