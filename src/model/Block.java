@@ -1,7 +1,7 @@
 package model;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utils.AnimationUtils;
 
 public abstract class Block {
     private ImageView imageView;
