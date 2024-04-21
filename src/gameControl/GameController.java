@@ -1,14 +1,24 @@
 package gameControl;
 
 import boardView.PalBoard;
+import config.Config;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.Bomb;
 import model.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class GameController {
@@ -17,7 +27,6 @@ public class GameController {
     private final int WIDTH = 15;
     private Player player1;
     private Player player2;
-
     private Player player3;
     private Player player4;
     private PalBoard palBoard;
@@ -26,9 +35,11 @@ public class GameController {
     private Thread movementThread;
     private Thread bombThread;
 
+    private final Map<Integer, Map<KeyCode, Boolean>> playerKeyStates = new HashMap<>();
+    private Map<String, Timeline> continuousMoveTimelines = new HashMap<>();
+    private Map<Integer, Timeline> animationTimelines = new HashMap<>();
 
-
-    private final int TILE_SIZE = 35;
+    private final int TILE_SIZE = Config.tileSize;
 
     public GameController() {
         this.palBoard = new PalBoard();
@@ -40,9 +51,9 @@ public class GameController {
 
     public void startGame(int number){
         if(number == 2){
-            this.player1 = new Player(1,3, 3,1);
+            //this.player1 = new Player(1,3, 3,1);
             this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
-            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            //palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
         }
         if(number == 3){
@@ -66,65 +77,101 @@ public class GameController {
         System.out.println("hi");
         palBoard.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
-            if (key == KeyCode.W || key == KeyCode.A || key == KeyCode.S || key == KeyCode.D || key == KeyCode.Q) {
-                GameController.getInstance().handleplayer1Movement(key);
-            } else if (key == KeyCode.Y || key == KeyCode.G || key == KeyCode.H || key == KeyCode.J || key == KeyCode.T) {
-                GameController.getInstance().handlePlayer2Movement(key);
-            } else if (key == KeyCode.NUMPAD8 || key == KeyCode.NUMPAD5 || key == KeyCode.NUMPAD4 || key == KeyCode.NUMPAD6 ||key == KeyCode.NUMPAD7 ) {
-                GameController.getInstance().handleplayer3Movement(key);
-            }else if (key == KeyCode.P || key == KeyCode.SEMICOLON || key == KeyCode.L || key == KeyCode.QUOTE ||key == KeyCode.O ) {
-                GameController.getInstance().handleplayer4Movement(key);
+            if (player1 != null && (key == KeyCode.W || key == KeyCode.A || key == KeyCode.S || key == KeyCode.D || key == KeyCode.Q)) {
+                startContinuousMove(player1, player1.getDirection(key));
+//                startAnimation();
+            } else if (player2 != null && (key == KeyCode.Y || key == KeyCode.G || key == KeyCode.H || key == KeyCode.J || key == KeyCode.T)) {
+                startContinuousMove(player2, player2.getDirection(key));
+//                startAnimation();
+            } else if (player3 != null && (key == KeyCode.NUMPAD8 || key == KeyCode.NUMPAD5 || key == KeyCode.NUMPAD4 || key == KeyCode.NUMPAD6 ||key == KeyCode.NUMPAD7)) {
+                startContinuousMove(player3, player3.getDirection(key));
+//                startAnimation();
+            }else if (player4 != null && (key == KeyCode.P || key == KeyCode.SEMICOLON || key == KeyCode.L || key == KeyCode.QUOTE ||key == KeyCode.O)) {
+                startContinuousMove(player4, player4.getDirection(key));
+//                startAnimation();
             }
         });
+        palBoard.setOnKeyReleased(event -> {
+            KeyCode key = event.getCode();
+            if (player1 != null && (key == KeyCode.W || key == KeyCode.A || key == KeyCode.S || key == KeyCode.D || key == KeyCode.Q)) {
+                stopContinuousMove(player1 + player1.getDirection(key));
+            } else if (player2 != null && (key == KeyCode.Y || key == KeyCode.G || key == KeyCode.H || key == KeyCode.J || key == KeyCode.T)) {
+                stopContinuousMove(player2 + player2.getDirection(key));
+            } else if (player3 != null && (key == KeyCode.NUMPAD8 || key == KeyCode.NUMPAD5 || key == KeyCode.NUMPAD4 || key == KeyCode.NUMPAD6 ||key == KeyCode.NUMPAD7)) {
+                stopContinuousMove(player3 + player3.getDirection(key));
+            }else if (player4 != null && (key == KeyCode.P || key == KeyCode.SEMICOLON || key == KeyCode.L || key == KeyCode.QUOTE ||key == KeyCode.O)) {
+                stopContinuousMove(player4 + player4.getDirection(key));
+            }
+        });
+    }
 
+    private void startContinuousMove(Player player, String direction) {
+
+        movementThread = new Thread(() -> {
+            if (Objects.equals(direction, "bomb")) {
+                placeBomb(player);
+            }
+            else if (!continuousMoveTimelines.containsKey(player.toString() + direction)) {
+//                switch (direction) {
+//                    case "up":
+//                        if(!isValidMove(player.getX(), player.getY()-1)) return;
+//                        player.moveUp();
+//                        break;
+//                    case "down":
+//                        if(!isValidMove(player.getX(), player.getY()+1)) return;
+//                        player.moveDown();
+//                        break;
+//                    case "left":
+//                        if(!isValidMove(player.getX()-1, player.getY())) return;
+//                        player.moveLeft();
+//                        break;
+//                    case "right":
+//                        if(!isValidMove(player.getX()+1, player.getY())) return;
+//                        player.moveRight();
+//                        break;
+//                }
+                Timeline timeline = new Timeline(
+                        new KeyFrame(javafx.util.Duration.millis(300), e -> {
+                            switch (direction) {
+                                case "up":
+                                    if(!isValidMove(player.getX(), player.getY()-1)) return;
+                                    player.moveUp();
+                                    break;
+                                case "down":
+                                    if(!isValidMove(player.getX(), player.getY()+1)) return;
+                                    player.moveDown();
+                                    break;
+                                case "left":
+                                    if(!isValidMove(player.getX()-1, player.getY())) return;
+                                    player.moveLeft();
+                                    break;
+                                case "right":
+                                    if(!isValidMove(player.getX()+1, player.getY())) return;
+                                    player.moveRight();
+                                    break;
+                            }
+                        })
+                );
+                timeline.setCycleCount(Timeline.INDEFINITE);
+                timeline.play();
+                continuousMoveTimelines.put(player + direction, timeline);
+            }
+        });
+        movementThread.start();
+    }
+
+    private void stopContinuousMove(String index) {
+        Timeline timeline = continuousMoveTimelines.get(index);
+        if (timeline != null) {
+            timeline.stop();
+            continuousMoveTimelines.remove(index);
+        }
     }
 
     public void handlePlayer2Movement(KeyCode key) {
-        if (!isMoving) {
-            isMoving = true;
-            movementThread = new Thread(() -> {
-                int currentplayer2X = player2.getX();
-                int currentplayer2Y = player2.getY();
-                int newTileX = currentplayer2X;
-                int newTileY = currentplayer2Y;
-                if (key == KeyCode.Y) {
-                    newTileY--;
-                    if(!isValidMove(newTileX, newTileY)) newTileY++;
-                } else if (key == KeyCode.H) {
-                    newTileY++;
-                    if(!isValidMove(newTileX, newTileY)) newTileY--;
-                } else if (key == KeyCode.G) {
-                    newTileX--;
-                    if(!isValidMove(newTileX, newTileY)) newTileX++;
-                } else if (key == KeyCode.J) {
-                    System.out.println("hi Movement");
-                    newTileX++;
-                    if(!isValidMove(newTileX, newTileY)) newTileX--;
-                } else if (key == KeyCode.T) {
-                    placeBomb(player2);
-                }
-                player2.setY(newTileY);
-                player2.setX(newTileX);
-                if (isValidMove(newTileX, newTileY)) {
-                    System.out.println(player2.getY());
-                    System.out.println(player2.getX());
-                    double incrementX = ((double) (newTileX - currentplayer2X));
-                    double incrementY = ((double) (newTileY - currentplayer2Y));
-                    System.out.println("Increment");
-                    System.out.println(incrementX);
-                    System.out.println(incrementY);
-                    System.out.println(player2.getBody().getLayoutX());
-                    Platform.runLater(() -> {
-                        player2.getBody().setLayoutX((player2.getBody().getLayoutX() + incrementX * TILE_SIZE));
-                        player2.getBody().setLayoutY((player2.getBody().getLayoutY() + incrementY * TILE_SIZE));
-                        System.out.println(player2.getBody().getLayoutX());
-                    });
-
-                }
-                isMoving = false;
-            });
-            movementThread.start();
-        }
+        movementThread = new Thread(() -> {
+        });
+        movementThread.start();
     }
     public void handleplayer3Movement(KeyCode key) {
         if (!isMoving) {
@@ -280,6 +327,15 @@ public class GameController {
         return false;
     }
 
+    private boolean isGameOver(){
+        int count = 0;
+        if (player1 != null) count++;
+        if (player2 != null) count++;
+        if (player3 != null) count++;
+        if (player4 != null) count++;
+        return count==1;
+    }
+
     private void placeBomb(Player player) {
         if (palBoard.getMap()[player.getY()][player.getX()] == 0 || palBoard.getMap()[player.getY()][player.getX()] == 1 ) {
             palBoard.getMap()[player.getY()][player.getX()] = 3; // Set map value to 3 to indicate a bomb
@@ -307,30 +363,72 @@ public class GameController {
                     }
 
                 }
-                detonateBomb(bomb);
+                detonateBomb(bomb, player.getPower());
             });
             bombThread.start();
             System.out.println("pass3");
         }
     }
 
-    private void detonateBomb(Bomb bomb) {
-        // Get bomb coordinates from the Circle object
-        int bombX = (int) Math.floor((bomb.getBombVisual().getLayoutX()-75) / TILE_SIZE);
+    private void detonateBomb(Bomb bomb, Integer playerPower) {
+        int bombX = (int) Math.floor((bomb.getBombVisual().getLayoutX() - 75) / TILE_SIZE);
         int bombY = (int) Math.floor(bomb.getBombVisual().getLayoutY() / TILE_SIZE);
         palBoard.getMap()[bombY][bombX] = 0; // Reset map value back to 0
 
+        ArrayList<Circle> explosionVisuals = new ArrayList<>();
+
+        // Create explosions in four directions within the range of player's power
         // Check surrounding tiles within range 1 in the four directions
         for (int dx = -1; dx <= 1; dx++) {
             // Check only horizontal movement
             int newX = bombX + dx;
             int newY = bombY;
-            if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] == 2) {
-                // Destroy breakable tile (map[y][x] == 2)
-                palBoard.getMap()[newY][newX] = 0;
-                Platform.runLater(() -> {
-                    palBoard.getChildren().remove(findTile(newX, newY));
-                });
+            if(player1 != null && player1.getX() == newX && player1.getY() == newY) {
+                player1.setHp(player1.getHp()-1);
+                if (player1.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player1.getBody());
+                        player1 = null;
+                    });
+                }
+            }
+            if(player2 != null && player2.getX() == newX && player2.getY() == newY) {
+                player2.setHp(player2.getHp()-1);
+                if (player2.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player2.getBody());
+                        player2 = null;
+                    });
+                }
+            }
+            if(player3 != null && player3.getX() == newX && player3.getY() == newY) {
+                player3.setHp(player3.getHp()-1);
+                if (player3.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player3.getBody());
+                        player3 = null;
+                    });
+                }
+            }
+            if(player4 != null && player4.getX() == newX && player4.getY() == newY) {
+                player4.setHp(player4.getHp()-1);
+                if (player4.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player4.getBody());
+                        player4 = null;
+                    });
+                }
+            }
+            if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] != 3) {
+                if (palBoard.getMap()[newY][newX] == 2) {
+                    // Destroy breakable tile (map[y][x] == 2)
+                    palBoard.getMap()[newY][newX] = 0;
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(findTile(newX, newY));
+                    });
+                }
+                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                explosionVisuals.add(explosionVisual);
             }
         }
 
@@ -339,12 +437,52 @@ public class GameController {
             if (Math.abs(dy) == 1) { // Check only vertical movement
                 int newX = bombX;
                 int newY = bombY + dy;
-                if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] == 2) {
-                    // Destroy breakable tile (map[y][x] == 2)
-                    palBoard.getMap()[newY][newX] = 0;
-                    Platform.runLater(() -> {
-                        palBoard.getChildren().remove(findTile(newX, newY));
-                    });
+                if(player1 != null && player1.getX() == newX && player1.getY() == newY) {
+                    player1.setHp(player1.getHp()-1);
+                    if (player1.getHp() == 0) {
+                        Platform.runLater(() -> {
+                            palBoard.getChildren().remove(player1.getBody());
+                            player1 = null;
+                        });
+                    }
+                }
+                if(player2 != null && player2.getX() == newX && player2.getY() == newY) {
+                    player2.setHp(player2.getHp()-1);
+                    if (player2.getHp() == 0) {
+                        Platform.runLater(() -> {
+                            palBoard.getChildren().remove(player2.getBody());
+                            player2 = null;
+                        });
+                    }
+                }
+                if(player3 != null && player3.getX() == newX && player3.getY() == newY) {
+                    player3.setHp(player3.getHp()-1);
+                    if (player3.getHp() == 0) {
+                        Platform.runLater(() -> {
+                            palBoard.getChildren().remove(player3.getBody());
+                            player3 = null;
+                        });
+                    }
+                }
+                if(player4 != null && player4.getX() == newX && player4.getY() == newY) {
+                    player4.setHp(player4.getHp()-1);
+                    if (player4.getHp() == 0) {
+                        Platform.runLater(() -> {
+                            palBoard.getChildren().remove(player4.getBody());
+                            player4 = null;
+                        });
+                    }
+                }
+                if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] != 3) {
+                    if (palBoard.getMap()[newY][newX] == 2) {
+                        // Destroy breakable tile (map[y][x] == 2)
+                        palBoard.getMap()[newY][newX] = 0;
+                        Platform.runLater(() -> {
+                            palBoard.getChildren().remove(findTile(newX, newY));
+                        });
+                    }
+                    Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                    explosionVisuals.add(explosionVisual);
                 }
             }
         }
@@ -354,8 +492,23 @@ public class GameController {
             palBoard.getChildren().remove(bomb.getBombVisual()); // Remove the bomb Circle object
             palBoard.getChildren().removeIf(node -> node instanceof Label && ((Label) node).getText().equals("0")); // Remove the timer label (assuming initial text is "4")
         });
+
+        Timeline removeExplosionsTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
+            for (Circle explosionVisual : explosionVisuals) {
+                palBoard.getChildren().remove(explosionVisual);
+            }
+        }));
+        removeExplosionsTimeline.play();
     }
 
+    private Circle createExplosionVisual(double x, double y) {
+        Circle explosionVisual = new Circle(75 + x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 2, Color.ORANGE); // Adjust color as needed
+        // Add explosion visual to the game board
+        Platform.runLater(() -> {
+            palBoard.getChildren().add(explosionVisual);
+        });
+        return explosionVisual;
+    }
 
     private Rectangle findTile(int x, int y) {
         for (Node tile : palBoard.getChildren()) {

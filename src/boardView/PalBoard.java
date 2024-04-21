@@ -1,5 +1,6 @@
 package boardView;
 
+import config.Config;
 import gameControl.GameController;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -14,7 +15,7 @@ import javafx.scene.shape.Rectangle;
 public class PalBoard extends Pane {
 
     private final int HEIGHT = 15;
-    private final int TILE = 35;
+    private final int TILE = Config.tileSize;
     private final int WIDTH = 15;
     private final int[][] map;
     public int[][] getMap() {
