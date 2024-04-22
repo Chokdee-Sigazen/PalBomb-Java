@@ -29,7 +29,7 @@ public class Player {
     public Player(int playerNumber,int x ,int y,int color){
         setHp(3);
         setPower(1);
-        setBomb(1);
+        setBomb(3);
         setSpeed(1);
         setImmortal(false);
         setGhost(false);
@@ -168,7 +168,7 @@ public class Player {
     }
 
     public void setBomb(int bomb) {
-        this.bomb = Math.max(bomb,1);
+        this.bomb = bomb;
     }
 
     public int getSpeed() {

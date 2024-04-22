@@ -2,7 +2,7 @@ package item;
 
 import model.Player;
 
-public class GhostItem {
+public class GhostItem implements Item{
     private final int GHOST_DURATION = 10;
 
     public void effect(Player player){

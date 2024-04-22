@@ -53,14 +53,14 @@ public class GameController {
         if(number == 2){
             //this.player1 = new Player(1,3, 3,1);
             this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
-            //palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            //palBoard.getChildren().add(GameController.getInstance().getPlayer1().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
         }
         if(number == 3){
             this.player1 = new Player(1,3, 3,1);
             this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
             this.player3 = new Player(3,HEIGHT-2,3,3);
-            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer1().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer3().getBody());
         }
@@ -69,7 +69,7 @@ public class GameController {
             this.player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
             this.player3 = new Player(3,HEIGHT-2,3,3);
             this.player4 = new Player(4,3,WIDTH-2,4);
-            palBoard.getChildren().add(GameController.getInstance().getplayer1().getBody());
+            palBoard.getChildren().add(GameController.getInstance().getPlayer1().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer2().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer3().getBody());
             palBoard.getChildren().add(GameController.getInstance().getPlayer4().getBody());
@@ -337,7 +337,10 @@ public class GameController {
     }
 
     private void placeBomb(Player player) {
-        if (palBoard.getMap()[player.getY()][player.getX()] == 0 || palBoard.getMap()[player.getY()][player.getX()] == 1 ) {
+        if (player.getBomb() > 0 && palBoard.getMap()[player.getY()][player.getX()] == 0 || palBoard.getMap()[player.getY()][player.getX()] == 1 ) {
+            System.out.println(player.toString() + "Bomb" + player.getBomb());
+            player.setBomb(player.getBomb()-1);
+            System.out.println(player.toString() + "Bomb" + player.getBomb());
             palBoard.getMap()[player.getY()][player.getX()] = 3; // Set map value to 3 to indicate a bomb
             Bomb bomb = new Bomb(player.getX(),player.getY(),TILE_SIZE);
             System.out.println("pass1");
@@ -363,23 +366,26 @@ public class GameController {
                     }
 
                 }
-                detonateBomb(bomb, player.getPower());
+                detonateBomb(bomb, player);
             });
             bombThread.start();
             System.out.println("pass3");
         }
     }
 
-    private void detonateBomb(Bomb bomb, Integer playerPower) {
+    private void detonateBomb(Bomb bomb, Player player) {
+        player.setBomb(player.getBomb()+1);
         int bombX = (int) Math.floor((bomb.getBombVisual().getLayoutX() - 75) / TILE_SIZE);
         int bombY = (int) Math.floor(bomb.getBombVisual().getLayoutY() / TILE_SIZE);
         palBoard.getMap()[bombY][bombX] = 0; // Reset map value back to 0
 
         ArrayList<Circle> explosionVisuals = new ArrayList<>();
 
+        int playerPower = player.getPower();
+
         // Create explosions in four directions within the range of player's power
         // Check surrounding tiles within range 1 in the four directions
-        for (int dx = -1; dx <= 1; dx++) {
+        for (int dx = -playerPower; dx <= playerPower; dx++) {
             // Check only horizontal movement
             int newX = bombX + dx;
             int newY = bombY;
@@ -433,57 +439,55 @@ public class GameController {
         }
 
         // Check surrounding tiles within range 1 vertically
-        for (int dy = -1; dy <= 1; dy++) {
-            if (Math.abs(dy) == 1) { // Check only vertical movement
-                int newX = bombX;
-                int newY = bombY + dy;
-                if(player1 != null && player1.getX() == newX && player1.getY() == newY) {
-                    player1.setHp(player1.getHp()-1);
-                    if (player1.getHp() == 0) {
-                        Platform.runLater(() -> {
-                            palBoard.getChildren().remove(player1.getBody());
-                            player1 = null;
-                        });
-                    }
+        for (int dy = -playerPower; dy <= playerPower; dy++) {
+            int newX = bombX;
+            int newY = bombY + dy;
+            if(player1 != null && player1.getX() == newX && player1.getY() == newY) {
+                player1.setHp(player1.getHp()-1);
+                if (player1.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player1.getBody());
+                        player1 = null;
+                    });
                 }
-                if(player2 != null && player2.getX() == newX && player2.getY() == newY) {
-                    player2.setHp(player2.getHp()-1);
-                    if (player2.getHp() == 0) {
-                        Platform.runLater(() -> {
-                            palBoard.getChildren().remove(player2.getBody());
-                            player2 = null;
-                        });
-                    }
+            }
+            if(player2 != null && player2.getX() == newX && player2.getY() == newY) {
+                player2.setHp(player2.getHp()-1);
+                if (player2.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player2.getBody());
+                        player2 = null;
+                    });
                 }
-                if(player3 != null && player3.getX() == newX && player3.getY() == newY) {
-                    player3.setHp(player3.getHp()-1);
-                    if (player3.getHp() == 0) {
-                        Platform.runLater(() -> {
-                            palBoard.getChildren().remove(player3.getBody());
-                            player3 = null;
-                        });
-                    }
+            }
+            if(player3 != null && player3.getX() == newX && player3.getY() == newY) {
+                player3.setHp(player3.getHp()-1);
+                if (player3.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player3.getBody());
+                        player3 = null;
+                    });
                 }
-                if(player4 != null && player4.getX() == newX && player4.getY() == newY) {
-                    player4.setHp(player4.getHp()-1);
-                    if (player4.getHp() == 0) {
-                        Platform.runLater(() -> {
-                            palBoard.getChildren().remove(player4.getBody());
-                            player4 = null;
-                        });
-                    }
+            }
+            if(player4 != null && player4.getX() == newX && player4.getY() == newY) {
+                player4.setHp(player4.getHp()-1);
+                if (player4.getHp() == 0) {
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(player4.getBody());
+                        player4 = null;
+                    });
                 }
-                if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] != 3) {
-                    if (palBoard.getMap()[newY][newX] == 2) {
-                        // Destroy breakable tile (map[y][x] == 2)
-                        palBoard.getMap()[newY][newX] = 0;
-                        Platform.runLater(() -> {
-                            palBoard.getChildren().remove(findTile(newX, newY));
-                        });
-                    }
-                    Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
-                    explosionVisuals.add(explosionVisual);
+            }
+            if (isValidCoordinate(newX, newY) && palBoard.getMap()[newY][newX] != 3) {
+                if (palBoard.getMap()[newY][newX] == 2) {
+                    // Destroy breakable tile (map[y][x] == 2)
+                    palBoard.getMap()[newY][newX] = 0;
+                    Platform.runLater(() -> {
+                        palBoard.getChildren().remove(findTile(newX, newY));
+                    });
                 }
+                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                explosionVisuals.add(explosionVisual);
             }
         }
 
@@ -544,7 +548,7 @@ public class GameController {
         return WIDTH;
     }
 
-    public Player getplayer1() {
+    public Player getPlayer1() {
         return player1;
     }
 
