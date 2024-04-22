@@ -8,6 +8,7 @@ import gameControl.GameController;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BlurType;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -18,11 +19,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.Player;
 import javafx.scene.effect.DropShadow;
-
 import java.awt.*;
 
-
 public class Goto {
+
     private static StartPane startPane;
     public static void setRootPane(StartPane startPane){
         Goto.startPane = startPane;
@@ -45,11 +45,31 @@ public class Goto {
 
     public static Button backToStartPane(){
         Button button = new Button("Back");
-        button.setBorder(new Border(new BorderStroke(Color.DARKCYAN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
-        button.setBackground(new Background(new BackgroundFill(Color.WHITE,null,null)));
-        button.setTextFill(Color.DARKCYAN);
-        button.setPrefWidth(300);
-        button.setOnMouseClicked(event -> startPane());
+        button.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+        button.setTextFill(Color.BLACK);
+        button.setFont(Font.font("Verdana", 32));
+        button.setPadding(new javafx.geometry.Insets(10, 50, 10, 50));
+        button.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+        button.setOnMouseEntered(event -> {
+            button.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));
+            button.setTextFill(Color.BLACK);
+        });
+        button.setOnMouseClicked(event ->{
+            button.setBackground(new Background(new BackgroundFill(Color.web("025800"), new CornerRadii(15),null)));
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    new Image("MainPage.png"),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
+            );
+            StartPane.getStartPane().setBackground(new Background(backgroundImage));
+            startPane();
+        });
+        button.setOnMouseExited(event -> {
+            button.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15),null)));
+            button.setTextFill(Color.BLACK);
+        });
         return button;
     }
 
@@ -68,6 +88,14 @@ public class Goto {
         });
         startGameButton.setOnMouseClicked(event -> {
             startGameButton.setBackground(new Background(new BackgroundFill(Color.web("025800"), new CornerRadii(15),null)));
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    new Image("SelectPlayer.png"),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
+            );
+            StartPane.getStartPane().setBackground(new Background(backgroundImage));
             selectPlayerPane();
         });
         startGameButton.setOnMouseExited(event -> {
@@ -84,6 +112,7 @@ public class Goto {
         endGameButton.setTextFill(Color.BLACK);
         endGameButton.setFont(Font.font("Verdana", 32));
         endGameButton.setPadding(new javafx.geometry.Insets(10, 60, 10, 60));
+        endGameButton.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
 
         endGameButton.setOnMouseEntered(event -> {
             endGameButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));

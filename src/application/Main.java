@@ -23,6 +23,13 @@ public class Main extends Application {
             primaryStage.close();
         }
     }
+
+    public static String setBackground = "";
+
+    public static void changeBG(String string){
+        setBackground = string;
+    };
+
     @Override
     public void start(Stage stage) throws Exception {
 
