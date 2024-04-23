@@ -28,7 +28,7 @@ public class PalBoard extends Pane {
 
     public PalBoard() {
         Rectangle bg = new Rectangle();
-        bg.setFill(Color.WHITE);
+        bg.setFill(Color.DARKSEAGREEN);
         bg.setWidth(TILE*17);
         bg.setHeight(TILE*17);
         bg.setLayoutX(75);
