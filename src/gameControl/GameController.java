@@ -2,11 +2,15 @@ package gameControl;
 
 import boardView.PalBoard;
 import config.Config;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -14,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import model.Bomb;
 import model.Player;
+import utils.AnimationUtils;
 
 import java.util.*;
 
@@ -340,27 +345,28 @@ public class GameController {
             palBoard.getMap()[player.getY()][player.getX()] = 3; // Set map value to 3 to indicate a bomb
             Bomb bomb = new Bomb(player.getX(),player.getY(),TILE_SIZE);
             System.out.println("pass1");
-            Label timerLabel = new Label(Integer.toString(bomb.getRemainingTime())); // Countdown timer label
-            timerLabel.setLayoutX(bomb.getBombVisual().getLayoutX() - timerLabel.prefWidth(0) / 2);
-            timerLabel.setLayoutY(bomb.getBombVisual().getLayoutY() - bomb.getBombVisual().getRadius());
             System.out.println("pass1.5");
             Platform.runLater(() -> {
-                palBoard.getChildren().addAll(bomb.getBombVisual(), timerLabel);
+                palBoard.getChildren().addAll(bomb.getBombVisual());
             });
             System.out.println("pass2");
             bombThread = new Thread(() -> {
                 for (int i = 3; i >= 0; i--) { // Countdown from 4 to 0
-                    final int count = i;
+                    int finalI = i;
                     Platform.runLater(() -> {
-                        timerLabel.setText(String.valueOf(count));
-                        bomb.getBombVisual().setFill(getColorForCountdown(count)); // Change color based on countdown
+                        ColorAdjust colorAdjust = new ColorAdjust();
+                        if( finalI % 2 == 0) {
+                            colorAdjust.setHue(100);
+                        } else {
+                            colorAdjust.setBrightness(0);
+                        }
+                        bomb.getBombVisual().setEffect(colorAdjust);
                     });
                     try {
                         Thread.sleep(1000); // Delay between color changes (1 second)
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
                 }
                 detonateBomb(bomb, player);
             });
@@ -375,7 +381,7 @@ public class GameController {
         int bombY = (int) Math.floor(bomb.getBombVisual().getLayoutY() / TILE_SIZE);
         palBoard.getMap()[bombY][bombX] = 0; // Reset map value back to 0
 
-        ArrayList<Circle> explosionVisuals = new ArrayList<>();
+        ArrayList<ImageView> explosionVisuals = new ArrayList<>();
 
         int playerPower = player.getPower();
 
@@ -407,7 +413,7 @@ public class GameController {
                         palBoard.getChildren().remove(findTile(newX, newY));
                     });
                 }
-                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                ImageView explosionVisual = createExplosionVisual(newX, newY);
                 explosionVisuals.add(explosionVisual);
             }
         }
@@ -440,7 +446,7 @@ public class GameController {
                         palBoard.getChildren().remove(findTile(newX, newY));
                     });
                 }
-                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                ImageView explosionVisual = createExplosionVisual(newX, newY);
                 explosionVisuals.add(explosionVisual);
             }
         }
@@ -473,7 +479,7 @@ public class GameController {
                         palBoard.getChildren().remove(findTile(newX, newY));
                     });
                 }
-                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                ImageView explosionVisual = createExplosionVisual(newX, newY);
                 explosionVisuals.add(explosionVisual);
             }
         }
@@ -506,7 +512,7 @@ public class GameController {
                         palBoard.getChildren().remove(findTile(newX, newY));
                     });
                 }
-                Circle explosionVisual = createExplosionVisual(newX * TILE_SIZE, newY * TILE_SIZE);
+                ImageView explosionVisual = createExplosionVisual(newX, newY);
                 explosionVisuals.add(explosionVisual);
             }
         }
@@ -518,15 +524,20 @@ public class GameController {
         });
 
         Timeline removeExplosionsTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
-            for (Circle explosionVisual : explosionVisuals) {
+            for (ImageView explosionVisual : explosionVisuals) {
                 palBoard.getChildren().remove(explosionVisual);
             }
         }));
         removeExplosionsTimeline.play();
     }
 
-    private Circle createExplosionVisual(double x, double y) {
-        Circle explosionVisual = new Circle(75 + x + TILE_SIZE / 2, y + TILE_SIZE / 2, TILE_SIZE / 2, Color.ORANGE); // Adjust color as needed
+    private ImageView createExplosionVisual(double x, double y) {
+        ImageView explosionVisual = new ImageView(AnimationUtils.getImageByPath("res/fireEffect.png")); // Adjust color as needed
+        explosionVisual.setFitWidth(TILE_SIZE);
+        explosionVisual.setFitHeight(TILE_SIZE);
+        explosionVisual.setPreserveRatio(true);
+        explosionVisual.setLayoutX(75 + x * TILE_SIZE);
+        explosionVisual.setLayoutY(y * TILE_SIZE);
         // Add explosion visual to the game board
         Platform.runLater(() -> {
             palBoard.getChildren().add(explosionVisual);
@@ -534,10 +545,10 @@ public class GameController {
         return explosionVisual;
     }
 
-    private Rectangle findTile(int x, int y) {
+    private ImageView findTile(int x, int y) {
         for (Node tile : palBoard.getChildren()) {
             if (tile.getLayoutX() == x * TILE_SIZE + 75  && tile.getLayoutY() == y * TILE_SIZE) {
-                return (Rectangle) tile;
+                return (ImageView) tile;
             }
         }
         return null;

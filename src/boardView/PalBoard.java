@@ -10,6 +10,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import model.Block;
+import model.BreakableBlock;
+import model.UnbreakableBlock;
 
 
 public class PalBoard extends Pane {
@@ -24,17 +27,30 @@ public class PalBoard extends Pane {
 
 
     public PalBoard() {
-
+        Rectangle bg = new Rectangle();
+        bg.setFill(Color.WHITE);
+        bg.setWidth(TILE*17);
+        bg.setHeight(TILE*17);
+        bg.setLayoutX(75);
+        bg.setLayoutY(0);
+        getChildren().add(bg);
         map = generateMap();
         System.out.println("hi");
         setPrefSize(WIDTH * TILE, HEIGHT * TILE);
         for (int y = 0; y <= HEIGHT+1; y++) {
             for (int x = 0; x <= WIDTH+1; x++) {
-                Rectangle tile = new Rectangle(TILE, TILE);
-                tile.setFill(getColor(map[y][x]));
-                tile.setLayoutX(75 + x * TILE);
-                tile.setLayoutY(y * TILE);
-                getChildren().add(tile);
+                Block tile;
+                if(map[y][x] == 2) {
+                    tile = new BreakableBlock();
+                } else if (map[y][x] == 3) {
+                    tile = new UnbreakableBlock();
+                } else continue;
+                tile.getImageView().setFitWidth(TILE);
+                tile.getImageView().setFitWidth(TILE);
+                tile.getImageView().setLayoutX(75 + x * TILE);
+                tile.getImageView().setLayoutY(y * TILE);
+                tile.getImageView().setPreserveRatio(true);
+                getChildren().add(tile.getImageView());
             }
         }
     }
