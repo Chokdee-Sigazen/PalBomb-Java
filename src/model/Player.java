@@ -27,7 +27,7 @@ public class Player {
     private final Map<KeyCode, String> keyDirection = new HashMap<>();
 
     public Player(int playerNumber,int x ,int y,int color){
-        setHp(3);
+        setHp(1);
         setPower(1);
         setBomb(3);
         setSpeed(1);
@@ -203,6 +203,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return "player"+playerNumber;
+        return "Player "+playerNumber;
     }
 }

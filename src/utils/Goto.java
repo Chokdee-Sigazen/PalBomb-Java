@@ -1,6 +1,7 @@
 package utils;
 
 import application.Main;
+import boardView.Endgame;
 import boardView.PalBoard;
 import boardView.SelectPlayerPane;
 import boardView.StartPane;
@@ -20,7 +21,7 @@ import javafx.stage.Stage;
 import model.Player;
 import javafx.scene.effect.DropShadow;
 import java.awt.*;
-
+import javafx.application.Platform;
 public class Goto {
 
     private static StartPane startPane;
@@ -35,6 +36,17 @@ public class Goto {
         for(int i = startPane.getChildren().size()-1 ;i>=0;i--){
             startPane.getChildren().remove(startPane.getChildren().get(i));
         }
+    }
+
+    public static void endGameClear() {
+        Platform.runLater(() -> {
+            if (startPane.getChildren().size() <= 0) {
+                return;
+            }
+            for (int i = startPane.getChildren().size() - 1; i >= 0; i--) {
+                startPane.getChildren().remove(startPane.getChildren().get(i));
+            }
+        });
     }
 
     public static void startPane(){
@@ -64,6 +76,7 @@ public class Goto {
                     new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
             );
             StartPane.getStartPane().setBackground(new Background(backgroundImage));
+            GameController.deleteAllPlayer();
             startPane();
         });
         button.setOnMouseExited(event -> {
@@ -139,5 +152,25 @@ public class Goto {
         startPane.getChildren().add(palBoard);
         palBoard.setFocusTraversable(true);
         startPane.getChildren().add(backToStartPane());
+    }
+
+    public static void endGame(Player player){
+        endGameClear();
+        Platform.runLater(() -> {
+            // Set Background
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    new Image("GameOver.png"),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false)
+            );
+            StartPane.getStartPane().setBackground(new Background(backgroundImage));
+
+            //Call Endgame
+            startPane.getChildren().add(new Endgame(player));
+            startPane.getChildren().add(backToStartPane());
+            startPane.getChildren().add(endGameButton());
+        });
     }
 }

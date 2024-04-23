@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import model.Bomb;
 import model.Player;
 import utils.AnimationUtils;
+import utils.Goto;
 
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class GameController {
 
     private final int HEIGHT = 15;
     private final int WIDTH = 15;
-    private ArrayList<Player> players;
+    public static ArrayList<Player> players;
     private PalBoard palBoard;
     private static GameController instance;
     private boolean isMoving = false;
@@ -376,6 +377,16 @@ public class GameController {
             }
         }));
         removeExplosionsTimeline.play();
+
+        //Game Over
+        if(isGameOver()){
+            for ( Player p : players) {
+                if (p != null) {
+                    Goto.endGame(p);
+                    return;
+                }
+            }
+        }
     }
 
     private ImageView createExplosionVisual(double x, double y) {
@@ -440,6 +451,13 @@ public class GameController {
 
     public Player getPlayer4() {
         return players.get(3);
+    }
+
+    public static void deleteAllPlayer(){
+        GameController.players.set(0,null);
+        GameController.players.set(1,null);
+        GameController.players.set(2,null);
+        GameController.players.set(3,null);
     }
 
     public static GameController getInstance() {

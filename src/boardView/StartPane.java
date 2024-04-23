@@ -16,14 +16,11 @@ public class StartPane extends VBox {
 
     private StartPane() {
         instance = this;
-        instance.setBackground(new Background(new BackgroundFill(Color.DARKCYAN,null,null)));
         instance.setAlignment(Pos.TOP_CENTER);
         instance.setSpacing(16);
-        instance.setPadding(new Insets(32,0,32,0));
         Goto.setRootPane(this);
         Goto.startPane();
     }
-
 
     public static StartPane getStartPane() {
         if (instance == null)

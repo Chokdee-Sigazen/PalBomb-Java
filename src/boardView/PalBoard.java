@@ -95,20 +95,4 @@ public class PalBoard extends Pane {
         }
         return generatedMap;
     }
-
-    private Color getColor(int value){
-        if(value == 0 || value == 1){
-            return Color.WHITE;
-        }
-        if(value == 2){
-            return Color.GREY; //Breakable Block
-        }
-        if(value == 3){
-            return Color.BLACK;  //UnBreakable Block
-        }
-        return null;
-    }
-
-
-
 }
