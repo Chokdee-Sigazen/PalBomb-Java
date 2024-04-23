@@ -49,7 +49,7 @@ public class Goto {
         button.setTextFill(Color.BLACK);
         button.setFont(Font.font("Verdana", 32));
         button.setPadding(new javafx.geometry.Insets(10, 50, 10, 50));
-        button.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+        button.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
         button.setOnMouseEntered(event -> {
             button.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));
             button.setTextFill(Color.BLACK);
@@ -79,7 +79,7 @@ public class Goto {
         startGameButton.setTextFill(Color.BLACK);
         startGameButton.setFont(Font.font("Verdana", 32));
         startGameButton.setPadding(new javafx.geometry.Insets(10, 50, 10, 50));
-        startGameButton.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+        startGameButton.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
         VBox.setMargin(startGameButton,new javafx.geometry.Insets(350,0,0,0));
 
         startGameButton.setOnMouseEntered(event -> {
@@ -112,7 +112,7 @@ public class Goto {
         endGameButton.setTextFill(Color.BLACK);
         endGameButton.setFont(Font.font("Verdana", 32));
         endGameButton.setPadding(new javafx.geometry.Insets(10, 60, 10, 60));
-        endGameButton.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+        endGameButton.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
 
         endGameButton.setOnMouseEntered(event -> {
             endGameButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(15),null)));

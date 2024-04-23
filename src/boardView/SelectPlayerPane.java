@@ -14,7 +14,7 @@ import utils.Goto;
 
 public class SelectPlayerPane extends GridPane {
     public SelectPlayerPane(){
-        this.setPadding(new Insets(150,12,12,12));
+        this.setPadding(new Insets(200,12,12,12));
         this.setVgap(40);
         this.setHgap(20); // Add horizontal gap between buttons
         this.setAlignment(Pos.CENTER); // Center the GridPane
@@ -47,7 +47,7 @@ public class SelectPlayerPane extends GridPane {
             button.setTextFill(Color.BLACK);
             button.setFont(Font.font("Verdana", 32));
             button.setPadding(new Insets(10, 50, 10, 50));
-            button.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+            button.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
             button.setMaxWidth(300);
 
             button.setOnMouseEntered(event -> {
@@ -75,7 +75,7 @@ public class SelectPlayerPane extends GridPane {
             button.setTextFill(Color.BLACK);
             button.setFont(Font.font("Verdana", 32));
             button.setPadding(new Insets(10, 50, 10, 50));
-            button.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+            button.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
             button.setMaxWidth(300);
 
             button.setOnMouseEntered(event -> {
@@ -103,7 +103,7 @@ public class SelectPlayerPane extends GridPane {
             button.setTextFill(Color.BLACK);
             button.setFont(Font.font("Verdana", 32));
             button.setPadding(new Insets(10, 50, 10, 50));
-            button.setEffect(new DropShadow(BlurType.GAUSSIAN,Color.BLACK,4,0,0,4));
+            button.setEffect(new DropShadow(BlurType.THREE_PASS_BOX,Color.BLACK,4,0,0,4));
             button.setMaxWidth(300);
 
             button.setOnMouseEntered(event -> {
