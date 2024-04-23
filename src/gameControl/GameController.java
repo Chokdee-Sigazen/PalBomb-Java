@@ -379,7 +379,7 @@ public class GameController {
     }
 
     private ImageView createExplosionVisual(double x, double y) {
-        ImageView explosionVisual = new ImageView(AnimationUtils.getImageByPath("res/fireEffect.png")); // Adjust color as needed
+        ImageView explosionVisual = new ImageView(AnimationUtils.getImageByPath("res/FireEffect.png")); // Adjust color as needed
         explosionVisual.setFitWidth(TILE_SIZE);
         explosionVisual.setFitHeight(TILE_SIZE);
         explosionVisual.setPreserveRatio(true);
