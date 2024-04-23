@@ -2,7 +2,7 @@ package model;
 
 public class BreakableBlock extends Block{
     public BreakableBlock(){
-        super("res/breakableBlock.png");
+        super("res/BreakableBlock.png");
     }
 
     @Override
