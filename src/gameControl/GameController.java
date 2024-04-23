@@ -27,21 +27,15 @@ public class GameController {
 
     private final int HEIGHT = 15;
     private final int WIDTH = 15;
-//    private Player player1;
-//    private Player player2;
-//    private Player player3;
-//    private Player player4;
     private ArrayList<Player> players;
     private PalBoard palBoard;
     private static GameController instance;
     private boolean isMoving = false;
     private Thread movementThread;
     private Thread bombThread;
-
     private final Map<Integer, Map<KeyCode, Boolean>> playerKeyStates = new HashMap<>();
     private Map<String, Timeline> continuousMoveTimelines = new HashMap<>();
     private Map<Integer, Timeline> animationTimelines = new HashMap<>();
-
     private final int TILE_SIZE = Config.tileSize;
 
     public GameController() {
@@ -58,11 +52,11 @@ public class GameController {
 
     public void startGame(int number){
         if(number >= 2){
-            //Player player1 = new Player(1,3, 3,1);
+            Player player1 = new Player(1,3, 3,1);
             Player player2 = new Player(2,HEIGHT-2,WIDTH-2,2);
-            //palBoard.getChildren().add(player1.getBody());
+            palBoard.getChildren().add(player1.getBody());
             palBoard.getChildren().add(player2.getBody());
-            //players.set(0, player1);
+            players.set(0, player1);
             players.set(1, player2);
         }
         if(number >= 3){
@@ -168,153 +162,6 @@ public class GameController {
             continuousMoveTimelines.remove(index);
         }
     }
-
-//    public void handlePlayer2Movement(KeyCode key) {
-//        movementThread = new Thread(() -> {
-//        });
-//        movementThread.start();
-//    }
-//    public void handleplayer3Movement(KeyCode key) {
-//        if (!isMoving) {
-//            isMoving = true;
-//            movementThread = new Thread(() -> {
-//                int currentplayer3X = player3.getX();
-//                int currentplayer3Y = player3.getY();
-//                int newTileX = currentplayer3X;
-//                int newTileY = currentplayer3Y;
-//                if (key == KeyCode.NUMPAD8) {
-//                    newTileY--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY++;
-//                } else if (key == KeyCode.NUMPAD5) {
-//                    newTileY++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY--;
-//                } else if (key == KeyCode.NUMPAD4) {
-//                    newTileX--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX++;
-//                } else if (key == KeyCode.NUMPAD6) {
-//                    System.out.println("hi Movement");
-//                    newTileX++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX--;
-//                } else if (key == KeyCode.NUMPAD7) {
-//                    placeBomb(player3);
-//                }
-//                player3.setY(newTileY);
-//                player3.setX(newTileX);
-//                if (isValidMove(newTileX, newTileY)) {
-//                    System.out.println(player3.getY());
-//                    System.out.println(player3.getX());
-//                    double incrementX = ((double) (newTileX - currentplayer3X));
-//                    double incrementY = ((double) (newTileY - currentplayer3Y));
-//                    System.out.println("Increment");
-//                    System.out.println(incrementX);
-//                    System.out.println(incrementY);
-//                    System.out.println(player3.getBody().getLayoutX());
-//                    Platform.runLater(() -> {
-//                        player3.getBody().setLayoutX((player3.getBody().getLayoutX() + incrementX * TILE_SIZE));
-//                        player3.getBody().setLayoutY((player3.getBody().getLayoutY() + incrementY * TILE_SIZE));
-//                        System.out.println(player3.getBody().getLayoutX());
-//                    });
-//
-//                }
-//                isMoving = false;
-//            });
-//            movementThread.start();
-//        }
-//    }
-//    public void handleplayer4Movement(KeyCode key) {
-//        if (!isMoving) {
-//            isMoving = true;
-//            movementThread = new Thread(() -> {
-//                int currentplayer4X = player4.getX();
-//                int currentplayer4Y = player4.getY();
-//                int newTileX = currentplayer4X;
-//                int newTileY = currentplayer4Y;
-//                if (key == KeyCode.P) {
-//                    newTileY--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY++;
-//                } else if (key == KeyCode.SEMICOLON) {
-//                    newTileY++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY--;
-//                } else if (key == KeyCode.L) {
-//                    newTileX--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX++;
-//                } else if (key == KeyCode.QUOTE) {
-//                    System.out.println("hi Movement");
-//                    newTileX++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX--;
-//                } else if (key == KeyCode.O) {
-//                    placeBomb(player4);
-//                }
-//                player4.setY(newTileY);
-//                player4.setX(newTileX);
-//                if (isValidMove(newTileX, newTileY)) {
-//                    System.out.println(player4.getY());
-//                    System.out.println(player4.getX());
-//                    double incrementX = ((double) (newTileX - currentplayer4X));
-//                    double incrementY = ((double) (newTileY - currentplayer4Y));
-//                    System.out.println("Increment");
-//                    System.out.println(incrementX);
-//                    System.out.println(incrementY);
-//                    System.out.println(player4.getBody().getLayoutX());
-//                    Platform.runLater(() -> {
-//                        player4.getBody().setLayoutX((player4.getBody().getLayoutX() + incrementX * TILE_SIZE));
-//                        player4.getBody().setLayoutY((player4.getBody().getLayoutY() + incrementY * TILE_SIZE));
-//                        System.out.println(player4.getBody().getLayoutX());
-//                    });
-//
-//                }
-//                isMoving = false;
-//            });
-//            movementThread.start();
-//        }
-//    }
-//    public void handleplayer1Movement(KeyCode key) {
-//        if (!isMoving) {
-//            isMoving = true;
-//            movementThread = new Thread(() -> {
-//                int currentplayer1X = player1.getX();
-//                int currentplayer1Y = player1.getY();
-//                int newTileX = currentplayer1X;
-//                int newTileY = currentplayer1Y;
-//                if (key == KeyCode.W) {
-//                    newTileY--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY++;
-//                } else if (key == KeyCode.S) {
-//                    newTileY++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileY--;
-//                } else if (key == KeyCode.A) {
-//                    newTileX--;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX++;
-//                } else if (key == KeyCode.D) {
-//                    System.out.println("hi Movement");
-//                    newTileX++;
-//                    if(!isValidMove(newTileX, newTileY)) newTileX--;
-//                } else if (key == KeyCode.Q) {
-//                    placeBomb(player1);
-//                }
-//                player1.setY(newTileY);
-//                player1.setX(newTileX);
-//                if (isValidMove(newTileX, newTileY)) {
-//                    System.out.println(player1.getY());
-//                    System.out.println(player1.getX());
-//                    double incrementX = ((double) (newTileX - currentplayer1X));
-//                    double incrementY = ((double) (newTileY - currentplayer1Y));
-//                    System.out.println("Increment");
-//                    System.out.println(incrementX);
-//                    System.out.println(incrementY);
-//                    System.out.println(player1.getBody().getLayoutX());
-//                    Platform.runLater(() -> {
-//                        player1.getBody().setLayoutX((player1.getBody().getLayoutX() + incrementX * TILE_SIZE));
-//                        player1.getBody().setLayoutY((player1.getBody().getLayoutY() + incrementY * TILE_SIZE));
-//                        System.out.println(player1.getBody().getLayoutX());
-//                    });
-//
-//                }
-//                isMoving = false;
-//            });
-//            movementThread.start();
-//        }
-//    }
 
     private boolean isValidCoordinate(int x, int y) {
         return x >= 0 && x <= WIDTH + 1 && y >= 0 && y <= HEIGHT + 1;
